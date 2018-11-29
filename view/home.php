@@ -1,5 +1,7 @@
 <?= view('inc/header.php') ?>
 
-<h1>CRM</h1>
+<div class="container">
+    <h1>CRM</h1>
+</div>
 
 <?= view('inc/footer.php') ?>
