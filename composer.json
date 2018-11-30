@@ -19,6 +19,7 @@
         "php-di/php-di": "^6.0",
         "psr/http-message": "^1.0",
         "zendframework/zend-diactoros": "^1.8",
-        "shrikeh/teapot": "^2.3"
+        "shrikeh/teapot": "^2.3",
+        "filp/whoops": "^2.3"
     }
 }
