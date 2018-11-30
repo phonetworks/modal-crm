@@ -66,3 +66,35 @@ if (! function_exists('view')) {
         return $content;
     }
 }
+
+if (! function_exists('url')) {
+
+    /**
+     * Generates full url for routes
+     */
+    function url($path = '')
+    {
+        $path = ltrim($path, '/');
+        $basePath = config('app.url');
+        if ($path) {
+            return $basePath . '/' . $path;
+        }
+        return $basePath;
+    }
+}
+
+if (! function_exists('asset')) {
+
+    /**
+     * Generates full url for assets like CSS, JS, image files
+     */
+    function asset($path = '')
+    {
+        $path = ltrim($path, '/');
+        $basePath = config('app.url');
+        if ($path) {
+            return $basePath . '/' . $path;
+        }
+        return $basePath;
+    }
+}

@@ -92,7 +92,7 @@ class RequestHandler
         }
 
         if (! $response instanceof ResponseInterface) {
-            $response = new HtmlResponse('', StatusCode::NO_CONTENT);
+            $response = new HtmlResponse('');
         }
 
         return $response;
