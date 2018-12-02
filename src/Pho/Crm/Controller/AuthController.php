@@ -101,4 +101,19 @@ class AuthController
 
         return new RedirectResponse(url(''));
     }
+
+    public function logoutPost(ServerRequestInterface $request)
+    {
+        $response = new RedirectResponse(url('login'));
+
+        $accessToken = $this->getAccessToken();
+        if (($accessToken === null)
+            || $accessToken->revoked) {
+            return $response;
+        }
+        $accessToken->revoked = true;
+        $accessToken->save();
+
+        return $response;
+    }
 }

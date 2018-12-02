@@ -19,7 +19,7 @@
                 <a href="#" class="nav-link">Service</a>
             </li>
         </ul>
-        <form method="post" action="logout">
+        <form method="post" action="<?= url('logout') ?>">
             <button type="submit" class="btn btn-outline-danger">Logout</button>
         </form>
     </div>

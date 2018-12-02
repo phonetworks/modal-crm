@@ -8,5 +8,6 @@ return function (RouteCollector $r) {
 
     $r->get('/login', 'AuthController@login');
     $r->post('/login', 'AuthController@loginPost');
+    $r->post('/logout', 'AuthController@logoutPost');
 
 };

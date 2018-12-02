@@ -8,19 +8,20 @@ trait AuthTrait
 {
     public function isLoggedIn()
     {
+        $accessToken = $this->getAccessToken();
+
+        return ($accessToken !== null)
+            && (! $accessToken->revoked);
+    }
+
+    public function getAccessToken()
+    {
         $accessTokenId = $_SESSION['access_token_id'] ?? null;
         if ($accessTokenId === null) {
-            return false;
+            return null;
         }
         $accessToken = AccessToken::where('id', $accessTokenId)
             ->where('expires_at', '>', new \DateTime())->first();
-        if ($accessToken === null) {
-            return false;
-        }
-        if ($accessToken->revoked) {
-            return false;
-        }
-
-        return true;
+        return $accessToken;
     }
 }
