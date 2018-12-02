@@ -6,6 +6,7 @@ use DI\Container;
 use FastRoute\Dispatcher;
 use Pho\Crm\Exception\AppException;
 use Pho\Crm\Exception\ExceptionHandler;
+use Pho\Crm\Session\SessionManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Teapot\StatusCode;
@@ -14,10 +15,12 @@ use Zend\Diactoros\Response\HtmlResponse;
 class RequestHandler
 {
     private $container;
+    private $sessionManager;
 
-    public function __construct(Container $container)
+    public function __construct(Container $container, SessionManager $sessionManager)
     {
         $this->container = $container;
+        $this->sessionManager = $sessionManager;
     }
 
     public function handle(Dispatcher $dispatcher)
@@ -50,6 +53,8 @@ class RequestHandler
                 case Dispatcher::FOUND:
                     $handler = $routeInfo[1];
                     $vars = $routeInfo[2];
+
+                    $this->sessionManager->run();
 
                     if ($handler instanceof \Closure) {
                         $response = $container->call($handler, $vars);
@@ -92,7 +97,12 @@ class RequestHandler
         }
 
         if (! $response instanceof ResponseInterface) {
-            $response = new HtmlResponse('');
+            if (is_string($response)) {
+                $response = new HtmlResponse($response);
+            }
+            else {
+                $response = new HtmlResponse('');
+            }
         }
 
         return $response;

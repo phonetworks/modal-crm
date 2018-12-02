@@ -20,6 +20,9 @@
         "psr/http-message": "^1.0",
         "zendframework/zend-diactoros": "^1.8",
         "shrikeh/teapot": "^2.3",
-        "filp/whoops": "^2.3"
+        "filp/whoops": "^2.3",
+        "predis/predis": "^1.1",
+        "rakit/validation": "^1.0",
+        "illuminate/database": "^5.5"
     }
 }
