@@ -10,4 +10,7 @@ return function (RouteCollector $r) {
     $r->post('/login', 'AuthController@loginPost');
     $r->post('/logout', 'AuthController@logoutPost');
 
+    $r->get('/leads', 'UserController@leads');
+    $r->get('/ajax/leads', 'UserController@leadsAjax');
+
 };

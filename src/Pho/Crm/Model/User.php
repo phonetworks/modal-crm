@@ -13,4 +13,14 @@ class User extends Model
     protected $casts = [
         'is_verified' => 'boolean',
     ];
+
+    public function instances()
+    {
+        return $this->hasMany(Instance::class, 'user_id', 'id');
+    }
+
+    public function serviceTickets()
+    {
+        return $this->hasMany(ServiceTicket::class, 'by', 'id');
+    }
 }
