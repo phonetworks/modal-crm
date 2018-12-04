@@ -30,30 +30,35 @@
 
 <script>
     
-(function ($) {
+(function ($, window) {
     'use strict';
 
     var $search = $('#search');
     var $form = $('#form');
-    $search.blur(function (ev) {
-        ev.preventDefault();
-        loadData({ append: true });
-    });
+    var currentPage = 1;
+    var lastPage = null;
     $form.submit(function (ev) {
         ev.preventDefault();
         loadData({ append: false });
     });
 
-    function loadData({ append = true }) {
+    function loadData({ append = true } = {}) {
 
         var search = $search.val();
 
-        $.get(<?= json_encode(url('ajax/leads')) ?> + '?' + $.param({ search: search }))
+        var queryParams = {
+            search: search,
+            page: currentPage,
+            limit: 2,
+        };
+        $.get(<?= json_encode(url('ajax/leads')) ?> + '?' + $.param(queryParams))
         .then(function (res) {
-            console.log(res);
+            if (! lastPage) {
+                lastPage = res.last_page;
+            }
             var users = res.data;
             var content = users.map(user => {
-                return `<tr><td>${user.first_name || ''} ${user.last_name || ''}</td><td>${user.instances[0].site.url}</td><td></td><td></td><td></td></tr>`;
+                return `<tr><td>${user.first_name || ''} ${user.last_name || ''}</td><td>${user.instances[0].site.url}</td><td></td><td></td><td>${user.access_tokens_count}</td></tr>`;
             }).join('');
             if (append) {
                 $('#users').append(content);
@@ -65,7 +70,16 @@
     }
     loadData({append: true});
 
-})(jQuery);
+    $(window).scroll(function () {
+        if( $(window).scrollTop() == $(document).height() - $(window).height() ) {
+            if (lastPage && currentPage < lastPage) {
+                currentPage++;
+                loadData();
+            }
+        }
+    });
+
+})(jQuery, window);
 
 </script>
 

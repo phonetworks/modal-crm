@@ -23,4 +23,9 @@ class User extends Model
     {
         return $this->hasMany(ServiceTicket::class, 'by', 'id');
     }
+
+    public function accessTokens()
+    {
+        return $this->hasMany(AccessToken::class, 'user_id', 'id');
+    }
 }

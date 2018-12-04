@@ -41,11 +41,28 @@ class UserController
 
         $search = $queryParams['search'] ?? '';
 
-        $users = User::offset($offset)->limit($limit);
-        $users = $users->with('instances.site', 'serviceTickets')->get();
+        $users = User::query();
+
+        if ($search) {
+            $users = $users->where('first_name', 'like', "%$search%");
+            $users = $users->orWhere('last_name', 'like', "%$search%");
+        }
+
+        $total = (clone $users)->count();
+        $lastPage = ceil($total / $limit) ?: 1;
+
+        $users = $users->offset($offset)->limit($limit);
+        $users = $users->with('instances.site', 'serviceTickets')->withCount([
+            'accessTokens' => function ($query) {
+                $query->whereRaw('created_at > (NOW() - INTERVAL 30 DAY)');
+            },
+        ])->get();
 
         return new JsonResponse([
             'data' => $users,
+            'current_page' => $page,
+            'last_page' => $lastPage,
+            'total' => $total,
         ]);
     }
 }
