@@ -10,7 +10,7 @@
                 <a href="#" class="nav-link">Home</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Leads</a>
+                <a href="<?= url('leads') ?>" class="nav-link">Leads</a>
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link">Customers</a>
