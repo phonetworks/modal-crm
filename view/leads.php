@@ -26,7 +26,34 @@
 
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<div id="email-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Send Email</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label class="col-form-label">Title</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Content</label>
+                        <textarea class="form-control"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     
@@ -49,7 +76,7 @@
         var queryParams = {
             search: search,
             page: currentPage,
-            limit: 2,
+            limit: 20,
         };
         $.get(<?= json_encode(url('ajax/leads')) ?> + '?' + $.param(queryParams))
         .then(function (res) {
@@ -57,22 +84,38 @@
                 lastPage = res.last_page;
             }
             var users = res.data;
-            var content = users.map(user => {
-                return `<tr><td>${user.first_name || ''} ${user.last_name || ''}</td><td>${user.instances[0].site.url}</td><td></td><td></td><td>${user.access_tokens_count}</td></tr>`;
-            }).join('');
+            var $content = users.map(user => {
+                var $tr = $(`<tr><td><button href="#" class="btn-email btn btn-link float-right"><span class="fas fa-envelope"></span></button>${user.first_name || ''} ${user.last_name || ''}</td><td>${user.instances[0].site.url}</td><td></td><td></td><td>${user.access_tokens_count}</td></tr>`);
+                $tr.find('.btn-email').on('click', function (ev) {
+                    ev.preventDefault();
+                    $('#email-modal').modal();
+                });
+                return $tr;
+            });
             if (append) {
-                $('#users').append(content);
+                $('#users').append($content);
             }
             else {
                 $('#users').html(content);
+            }
+
+            // Load more content if not reached bottom of the page
+            if (hasNextPage()
+                && ($('html').height() - $(window).scrollTop() < $(document).height())) {
+                currentPage++;
+                loadData();
             }
         });
     }
     loadData({append: true});
 
+    function hasNextPage() {
+        return lastPage && currentPage < lastPage;
+    }
+
     $(window).scroll(function () {
         if( $(window).scrollTop() == $(document).height() - $(window).height() ) {
-            if (lastPage && currentPage < lastPage) {
+            if (hasNextPage()) {
                 currentPage++;
                 loadData();
             }
