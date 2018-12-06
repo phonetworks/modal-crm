@@ -46,13 +46,25 @@ class UserController
         if ($search) {
             $users = $users->where('first_name', 'like', "%$search%");
             $users = $users->orWhere('last_name', 'like', "%$search%");
+
+            $users = $users->orWhereHas('instances', function ($query) use ($search) {
+                $query->whereHas('site', function ($query) use ($search) {
+                    $query->where('url', 'like', "%$search%");
+                });
+            });
         }
 
         $total = (clone $users)->count();
         $lastPage = ceil($total / $limit) ?: 1;
 
         $users = $users->offset($offset)->limit($limit);
-        $users = $users->with('instances.site', 'serviceTickets')->withCount([
+        $users = $users->with([
+            'instances.site',
+            'serviceTickets' => function ($query) {
+                $query->withCount(['serviceConversations']);
+            },
+        ])
+        ->withCount([
             'accessTokens' => function ($query) {
                 $query->whereRaw('created_at > (NOW() - INTERVAL 30 DAY)');
             },
