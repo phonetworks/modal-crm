@@ -15,7 +15,7 @@
             <tr>
                 <th>Name</th>
                 <th>Website</th>
-                <th># of email converation</th>
+                <th># of email conversation</th>
                 <th>Site Health Score</th>
                 <th># of times logged in the last week</th>
             </tr>
@@ -60,6 +60,7 @@
 (function ($, window) {
     'use strict';
 
+    var baseUrl = <?= json_encode(url()) ?>;
     var $search = $('#search');
     var $form = $('#form');
     var currentPage = 1;
@@ -85,7 +86,17 @@
             }
             var users = res.data;
             var $content = users.map(user => {
-                var $tr = $(`<tr><td><button href="#" class="btn-email btn btn-link float-right"><span class="fas fa-envelope"></span></button>${user.first_name || ''} ${user.last_name || ''}</td><td>${user.instances[0].site.url}</td><td>${user.service_conversations_count}</td><td></td><td>${user.access_tokens_count}</td></tr>`);
+                var $tr = $(`
+<tr>
+    <td>
+        <button href="#" class="btn-email btn btn-link float-right"><span class="fas fa-envelope"></span></button>
+        <a href="${baseUrl}/leads/${user.id}">${user.first_name || ''} ${user.last_name || ''}</a>
+    </td>
+    <td>${user.instances[0].site.url}</td>
+    <td>${user.service_conversations_count}</td>
+    <td></td><td>${user.access_tokens_count}</td>
+</tr>
+`);
                 $tr.find('.btn-email').on('click', function (ev) {
                     ev.preventDefault();
                     $('#email-modal').modal();
