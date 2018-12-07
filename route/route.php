@@ -13,4 +13,6 @@ return function (RouteCollector $r) {
     $r->get('/leads', 'UserController@leads');
     $r->get('/ajax/leads', 'UserController@leadsAjax');
 
+    $r->get('/service-tickets', 'ServiceTicketController@ticketList');
+
 };

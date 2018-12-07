@@ -13,4 +13,9 @@ class AccessToken extends Model
     protected $casts = [
         'revoked' => 'boolean',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

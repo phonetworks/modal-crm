@@ -24,4 +24,10 @@ trait AuthTrait
             ->where('expires_at', '>', new \DateTime())->first();
         return $accessToken;
     }
+
+    public function getCurrentUser()
+    {
+        $accessToken = $this->getAccessToken();
+        return $accessToken->user;
+    }
 }
