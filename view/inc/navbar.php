@@ -16,7 +16,7 @@
                 <a href="#" class="nav-link">Customers</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Service</a>
+                <a href="<?= url('service-tickets') ?>" class="nav-link">Service</a>
             </li>
         </ul>
         <form method="post" action="<?= url('logout') ?>">
