@@ -60,14 +60,12 @@ class UserController
         $users = $users->offset($offset)->limit($limit);
         $users = $users->with([
             'instances.site',
-            'serviceTickets' => function ($query) {
-                $query->withCount(['serviceConversations']);
-            },
         ])
         ->withCount([
             'accessTokens' => function ($query) {
                 $query->whereRaw('created_at > (NOW() - INTERVAL 30 DAY)');
             },
+            'serviceConversations',
         ])->get();
 
         return new JsonResponse([

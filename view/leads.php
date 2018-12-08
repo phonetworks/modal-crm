@@ -85,10 +85,7 @@
             }
             var users = res.data;
             var $content = users.map(user => {
-                var conversationCount = user.service_tickets.reduce(function (acc, ticket) {
-                    return acc + ticket.service_conversations_count;
-                }, 0);
-                var $tr = $(`<tr><td><button href="#" class="btn-email btn btn-link float-right"><span class="fas fa-envelope"></span></button>${user.first_name || ''} ${user.last_name || ''}</td><td>${user.instances[0].site.url}</td><td>${conversationCount}</td><td></td><td>${user.access_tokens_count}</td></tr>`);
+                var $tr = $(`<tr><td><button href="#" class="btn-email btn btn-link float-right"><span class="fas fa-envelope"></span></button>${user.first_name || ''} ${user.last_name || ''}</td><td>${user.instances[0].site.url}</td><td>${user.service_conversations_count}</td><td></td><td>${user.access_tokens_count}</td></tr>`);
                 $tr.find('.btn-email').on('click', function (ev) {
                     ev.preventDefault();
                     $('#email-modal').modal();
