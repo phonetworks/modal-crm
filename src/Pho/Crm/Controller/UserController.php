@@ -75,4 +75,27 @@ class UserController
             'total' => $total,
         ]);
     }
+
+    public function leadDetail($user_id)
+    {
+        $isLoggedIn = $this->isLoggedIn();
+        if (! $isLoggedIn) {
+            return new RedirectResponse(url('login'));
+        }
+
+        $user = User::where('id', $user_id)
+        ->with([
+            'instances.site',
+        ])
+        ->withCount([
+            'accessTokens' => function ($query) {
+                $query->whereRaw('created_at > (NOW() - INTERVAL 30 DAY)');
+            },
+            'serviceConversations',
+        ])->first();
+
+        return new HtmlResponse(view('lead_detail.php', [
+            'user' => $user,
+        ]));
+    }
 }
