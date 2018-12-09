@@ -15,4 +15,6 @@ return function (RouteCollector $r) {
 
     $r->get('/service-tickets', 'ServiceTicketController@ticketList');
 
+    $r->post('/mailgun-messages', 'MailgunController@index');
+
 };

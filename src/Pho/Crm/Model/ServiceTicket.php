@@ -20,6 +20,11 @@ class ServiceTicket extends Model
     const FEEDBACK_NEUTRAL = 2;
     const FEEDBACK_HAPPY = 3;
 
+    protected $fillable = [
+        'uuid', 'title', 'type', 'by', 'open_date', 'status',
+        'assignee', 'first_response_date', 'close_date', 'user_feedback',
+    ];
+
     public function serviceConversations()
     {
         return $this->hasMany(ServiceConversation::class, 'uuid', 'uuid');
