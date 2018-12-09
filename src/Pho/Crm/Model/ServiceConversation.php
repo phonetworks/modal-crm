@@ -14,6 +14,11 @@ class ServiceConversation extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'uuid', 'user_id', 'text', 'source',
+        'uuid', 'user_id', 'text', 'source', 'created_at',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

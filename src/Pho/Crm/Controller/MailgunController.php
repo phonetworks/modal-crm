@@ -38,6 +38,7 @@ class MailgunController
                 'user_id' => $user->id,
                 'text' => $bodyPlain,
                 'source' => ServiceConversation::SOURCE_EMAIL,
+                'created_at' => Carbon::now(),
             ]);
             Manager::connection()->commit();
         }
