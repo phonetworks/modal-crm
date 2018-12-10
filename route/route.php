@@ -15,5 +15,8 @@ return function (RouteCollector $r) {
     $r->get('/leads/{user_id:\d+}', 'UserController@leadDetail');
 
     $r->get('/service-tickets', 'ServiceTicketController@ticketList');
+    $r->get('/service-tickets/{uuid}', 'ServiceTicketController@conversation');
+
+    $r->post('/mailgun-messages', 'MailgunController@index');
 
 };

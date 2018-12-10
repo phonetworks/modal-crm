@@ -28,7 +28,43 @@ class ServiceTicketController
             ->orderBy('open_date', 'desc')
             ->get();
 
-        $ticketTypeToText = function ($type) {
+        return new HtmlResponse(view('tickets.php', [
+            'tickets' => $tickets,
+            'ticketStatusToText' => $this->getTicketStatusToText(),
+            'ticketTypeToText' => $this->getTicketTypeToText(),
+        ]));
+    }
+
+    public function conversation($uuid)
+    {
+        $isLoggedIn = $this->isLoggedIn();
+        if (! $isLoggedIn) {
+            return new RedirectResponse(url('login'));
+        }
+
+        $ticket = ServiceTicket::where('uuid', $uuid)
+            ->with([
+                'serviceConversations' => function ($query) {
+                    $query->orderBy('created_at', 'desc');
+                },
+                'serviceConversations.user',
+                'assigneeUser',
+                'byUser',
+            ])
+            ->firstOrFail();
+        $conversations = $ticket->serviceConversations;
+
+        return new HtmlResponse(view('ticket_conversation.php', [
+            'ticket' => $ticket,
+            'conversations' => $conversations,
+            'ticketStatusToText' => $this->getTicketStatusToText(),
+            'ticketTypeToText' => $this->getTicketTypeToText(),
+        ]));
+    }
+
+    public function getTicketTypeToText()
+    {
+        return function ($type) {
             $text = '';
             switch ($type) {
                 case ServiceTicket::TYPE_SUPPORT:
@@ -37,8 +73,11 @@ class ServiceTicketController
             }
             return $text;
         };
+    }
 
-        $ticketStatusToText = function ($status) {
+    public function getTicketStatusToText()
+    {
+        return function ($status) {
             $text = '';
             switch ($status) {
                 case ServiceTicket::STATUS_OPEN:
@@ -53,11 +92,5 @@ class ServiceTicketController
             }
             return $text;
         };
-
-        return new HtmlResponse(view('tickets.php', [
-            'tickets' => $tickets,
-            'ticketStatusToText' => $ticketStatusToText,
-            'ticketTypeToText' => $ticketTypeToText,
-        ]));
     }
 }

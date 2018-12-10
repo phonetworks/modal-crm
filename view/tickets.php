@@ -7,7 +7,7 @@
     <table class="table table-bordered mt">
         <thead>
             <tr>
-                <th>UUID</th>
+                <th>Ticket ID</th>
                 <th>Title</th>
                 <th>Type</th>
                 <th>By</th>
