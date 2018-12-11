@@ -16,6 +16,7 @@ return function (RouteCollector $r) {
 
     $r->get('/service-tickets', 'ServiceTicketController@ticketList');
     $r->get('/service-tickets/{uuid}', 'ServiceTicketController@conversation');
+    $r->post('/service-tickets/{uuid}/reply', 'ServiceTicketController@replyPost');
 
     $r->post('/mailgun-messages', 'MailgunController@index');
 
