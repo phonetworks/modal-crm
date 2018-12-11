@@ -13,24 +13,26 @@
         <div>Status: <?= $ticketStatusToText($ticket->status) ?></div>
     </div>
 
-    <div class="mt-4">
-        <form method="post" action="<?= url("service-tickets/{$ticket->uuid}/reply") ?>">
-            <?php if (isset($fail_message)): ?>
-                <div class="text-danger"><?= $fail_message ?></div>
-            <?php endif ?>
-            <label for="reply">Reply</label>
-            <div class="form-group">
-                <textarea name="text" id="reply" class="form-control"></textarea>
-                <?php if (isset($errors) && $errors->has('text')): ?>
-                    <div class="text-danger"><?= $errors->first('text') ?></div>
+    <?php if ($ticket->status !== \Pho\Crm\Model\ServiceTicket::STATUS_CLOSED): ?>
+        <div class="mt-4">
+            <form method="post" action="<?= url("service-tickets/{$ticket->uuid}/reply") ?>">
+                <?php if (isset($fail_message)): ?>
+                    <div class="text-danger"><?= $fail_message ?></div>
                 <?php endif ?>
-            </div>
-            <div class="clearfix mt-2">
-                <button type="submit" class="btn btn-primary float-right">Reply</button>
-                <button type="button" id="btn-canned-response" class="btn btn-secondary float-right mr-2">Load Canned Response</button>
-            </div>
-        </form>
-    </div>
+                <label for="reply">Reply</label>
+                <div class="form-group">
+                    <textarea name="text" id="reply" class="form-control"></textarea>
+                    <?php if (isset($errors) && $errors->has('text')): ?>
+                        <div class="text-danger"><?= $errors->first('text') ?></div>
+                    <?php endif ?>
+                </div>
+                <div class="clearfix mt-2">
+                    <button type="submit" class="btn btn-primary float-right">Reply</button>
+                    <button type="button" id="btn-canned-response" class="btn btn-secondary float-right mr-2">Load Canned Response</button>
+                </div>
+            </form>
+        </div>
+    <?php endif ?>
 
     <div class="mt-4">
         <?php foreach ($conversations as $conversation): ?>
