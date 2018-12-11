@@ -14,11 +14,19 @@
     </div>
 
     <div class="mt-4">
-        <form method="post">
+        <form method="post" action="<?= url("service-tickets/{$ticket->uuid}/reply") ?>">
+            <?php if (isset($fail_message)): ?>
+                <div class="text-danger"><?= $fail_message ?></div>
+            <?php endif ?>
             <label for="reply">Reply</label>
-            <textarea id="reply" class="form-control"></textarea>
+            <div class="form-group">
+                <textarea name="text" id="reply" class="form-control"></textarea>
+                <?php if (isset($errors) && $errors->has('text')): ?>
+                    <div class="text-danger"><?= $errors->first('text') ?></div>
+                <?php endif ?>
+            </div>
             <div class="clearfix mt-2">
-                <button type="submit" class="btn btn-primary float-right">Submit</button>
+                <button type="submit" class="btn btn-primary float-right">Reply</button>
             </div>
         </form>
     </div>
