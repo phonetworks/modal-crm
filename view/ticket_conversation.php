@@ -27,6 +27,7 @@
             </div>
             <div class="clearfix mt-2">
                 <button type="submit" class="btn btn-primary float-right">Reply</button>
+                <button type="button" id="btn-canned-response" class="btn btn-secondary float-right mr-2">Load Canned Response</button>
             </div>
         </form>
     </div>
@@ -47,5 +48,35 @@
         <?php endforeach ?>
     </div>
 </div>
+
+<script>
+
+(function ($) {
+    'use strict';
+
+    var cannedResponses = <?= json_encode($cannedResponses) ?>;
+    var $reply = $('#reply');
+
+    var popoverContent = `
+<div class="list-group">
+    ${cannedResponses.map(res => `<a href="#" tabindex="0" data-text="${res}" class="btn-insert list-group-item list-group-item-action">${res}</a>`).join('')}
+</div>
+`;
+    var $popoverContent = $(popoverContent);
+    $popoverContent.find('.btn-insert').on('click', function (ev) {
+        ev.preventDefault();
+
+        $reply.text($(this).data('text'));
+    });
+    $('#btn-canned-response').popover({
+        placement: 'top',
+        html: true,
+        content: $popoverContent,
+        trigger: 'focus',
+    });
+
+})(jQuery);
+
+</script>
 
 <?= view('inc/footer.php') ?>
