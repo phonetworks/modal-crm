@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class ServiceTicket extends Model
 {
     protected $table = 'service-tickets';
+    protected $primaryKey = 'uuid';
 
+    public $incrementing = false;
     public $timestamps = false;
 
     const TYPE_SUPPORT = 1;
