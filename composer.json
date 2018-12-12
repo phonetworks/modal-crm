@@ -25,6 +25,8 @@
         "rakit/validation": "^1.0",
         "illuminate/database": "^5.5",
         "ramsey/uuid": "^3.8",
-        "nesbot/carbon": "^1.36"
+        "nesbot/carbon": "^1.36",
+        "psr/http-server-handler": "^1.0",
+        "psr/http-server-middleware": "^1.0"
     }
 }
