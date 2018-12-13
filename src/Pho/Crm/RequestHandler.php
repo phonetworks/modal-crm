@@ -4,7 +4,6 @@ namespace Pho\Crm;
 
 use DI\Container;
 use FastRoute\Dispatcher;
-use Pho\Crm\Exception\AppException;
 use Pho\Crm\Exception\ExceptionHandler;
 use Pho\Crm\Session\SessionManager;
 use Psr\Http\Message\ResponseInterface;
@@ -56,35 +55,8 @@ class RequestHandler
 
                     $this->sessionManager->run();
 
-                    if ($handler instanceof \Closure) {
-                        $response = $container->call($handler, $vars);
-                    }
-                    elseif (is_string($handler)) {
-                        list($className, $method) = explode('@', $handler);
+                    $response = $this->handleFound($handler, $vars);
 
-                        $fullClassName = "Pho\\Crm\\Controller\\{$className}";
-                        if (! class_exists($fullClassName)) {
-                            throw new AppException("class {$fullClassName} does not exist");
-                        }
-                        if ($method !== null && ! method_exists($fullClassName, $method)) {
-                            throw new AppException("method {$method} does not exist in class {$fullClassName}");
-                        }
-
-                        $controller = $container->get($fullClassName);
-
-                        if (in_array($method, [ null, '' ])) {
-                            if (! is_callable($controller)) {
-                                throw new AppException("{$fullClassName} is not a callable");
-                            }
-                            $response = $container->call($controller, $vars);
-                        }
-                        else {
-                            $response = $container->call([ $controller, $method ], $vars);
-                        }
-                    }
-                    else {
-                        throw new AppException("Unsupported handler type " . gettype($handler));
-                    }
                     break;
 
                 default:
@@ -104,6 +76,34 @@ class RequestHandler
                 $response = new HtmlResponse('');
             }
         }
+
+        return $response;
+    }
+
+    public function handleFound($handler, $vars)
+    {
+        $container = $this->container;
+        $handlerAction = $handler;
+        $middlewares = [];
+
+        if (is_array($handler)) {
+            $handlerAction = current(array_values(array_slice($handler, -1)));
+            $middlewareDefinitions = array_values(array_slice($handler, 0, -1));
+            $middlewares = array_map(function ($middlewareDefinition) use ($container) {
+                $registeredMiddlewares = config('middleware');
+                if (array_key_exists($middlewareDefinition, $registeredMiddlewares)) {
+                    return $container->get($registeredMiddlewares[$middlewareDefinition]);
+                }
+                throw new \Exception('Middleware not registered');
+            }, $middlewareDefinitions);
+        }
+        $routeHandler = new RouteHandler($container, $handlerAction, $vars);
+        $queueRequestHandler = new QueueRequestHandler($routeHandler);
+        foreach ($middlewares as $middleware) {
+            $queueRequestHandler->add($middleware);
+        }
+
+        $response = $container->call([ $queueRequestHandler, 'handle' ]);
 
         return $response;
     }

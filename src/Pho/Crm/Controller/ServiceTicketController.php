@@ -4,9 +4,9 @@ namespace Pho\Crm\Controller;
 
 use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager;
+use Pho\Crm\Auth;
 use Pho\Crm\Model\ServiceConversation;
 use Pho\Crm\Model\ServiceTicket;
-use Pho\Crm\Traits\AuthTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Rakit\Validation\Validator;
 use Zend\Diactoros\Response\HtmlResponse;
@@ -14,16 +14,16 @@ use Zend\Diactoros\Response\RedirectResponse;
 
 class ServiceTicketController
 {
-    use AuthTrait;
+    private $auth;
+
+    public function __construct(Auth $auth)
+    {
+        $this->auth = $auth;
+    }
 
     public function ticketList()
     {
-        $isLoggedIn = $this->isLoggedIn();
-        if (! $isLoggedIn) {
-            return new RedirectResponse(url('login'));
-        }
-
-        $user = $this->getCurrentUser();
+        $user = $this->auth->getUser();
 
         $tickets = ServiceTicket::query();
 
@@ -42,11 +42,6 @@ class ServiceTicketController
 
     public function conversation($uuid)
     {
-        $isLoggedIn = $this->isLoggedIn();
-        if (! $isLoggedIn) {
-            return new RedirectResponse(url('login'));
-        }
-
         $ticket = ServiceTicket::where('uuid', $uuid)
             ->with([
                 'serviceConversations' => function ($query) {
@@ -70,11 +65,6 @@ class ServiceTicketController
 
     public function replyPost($uuid, ServerRequestInterface $request)
     {
-        $isLoggedIn = $this->isLoggedIn();
-        if (! $isLoggedIn) {
-            return new RedirectResponse(url('login'));
-        }
-
         $ticket = ServiceTicket::where('uuid', $uuid)
             ->with([
                 'serviceConversations' => function ($query) {
@@ -118,14 +108,14 @@ class ServiceTicketController
         }
 
         $text = $body['text'];
-        $currentUser = $this->getCurrentUser();
+        $currentUser = $this->auth->getUser();
         $isRepliedByCreator = $ticket->byUser->id === $currentUser->id;
         $now = Carbon::now();
 
         Manager::connection()->beginTransaction();
         ServiceConversation::create([
             'uuid' => $uuid,
-            'user_id' => $this->getCurrentUser()->id,
+            'user_id' => $this->auth->getUser()->id,
             'text' => $text,
             'source' => ServiceConversation::SOURCE_WEBSITE,
             'created_at' => $now,
