@@ -64,7 +64,7 @@ class ServiceTicketController
             'conversations' => $conversations,
             'ticketStatusToText' => $this->getTicketStatusToText(),
             'ticketTypeToText' => $this->getTicketTypeToText(),
-            'cannedResponses' => config('content.canned_responses'),
+            'cannedResponses' => config('crm.canned_responses'),
         ]));
     }
 
@@ -93,7 +93,7 @@ class ServiceTicketController
                 'conversations' => $conversations,
                 'ticketStatusToText' => $this->getTicketStatusToText(),
                 'ticketTypeToText' => $this->getTicketTypeToText(),
-                'cannedResponses' => config('content.canned_responses'),
+                'cannedResponses' => config('crm.canned_responses'),
                 'fail_message' => 'Ticket already closed',
             ]));
         }
@@ -111,7 +111,7 @@ class ServiceTicketController
                 'conversations' => $conversations,
                 'ticketStatusToText' => $this->getTicketStatusToText(),
                 'ticketTypeToText' => $this->getTicketTypeToText(),
-                'cannedResponses' => config('content.canned_responses'),
+                'cannedResponses' => config('crm.canned_responses'),
                 'body' => $body,
                 'errors' => $errors,
             ]));
