@@ -30,6 +30,7 @@ class MailgunController
                 'title' => $subject,
                 'type' => ServiceTicket::TYPE_SUPPORT,
                 'by' => $user->id,
+                'assignee' => $this->getDefaultAssigneeId(),
                 'open_date' => Carbon::now(),
                 'status' => ServiceTicket::STATUS_OPEN,
             ]);
@@ -44,5 +45,15 @@ class MailgunController
         }
 
         return new HtmlResponse('OK');
+    }
+
+    public function getDefaultAssigneeId()
+    {
+        $defaultAssigneeEmail = config('crm.default_assignee_email');
+        if (! $defaultAssigneeEmail) {
+            return null;
+        }
+        $defaultAssignee =  User::where('email', $defaultAssigneeEmail)->first();
+        return $defaultAssignee ? $defaultAssignee->id : null;
     }
 }

@@ -7,4 +7,5 @@ return [
         }
         return [];
     })(),
+    'default_assignee_email' => env('CRM_DEFAULT_ASSIGNEE_EMAIL'),
 ];
