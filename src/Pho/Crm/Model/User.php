@@ -19,6 +19,12 @@ class User extends Model
         return $this->hasMany(Instance::class, 'user_id', 'id');
     }
 
+    public function serviceConversations()
+    {
+        return $this->hasManyThrough(ServiceConversation::class, ServiceTicket::class,
+            'by', 'uuid', 'id', 'uuid');
+    }
+
     public function serviceTickets()
     {
         return $this->hasMany(ServiceTicket::class, 'by', 'id');

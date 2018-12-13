@@ -12,6 +12,7 @@ return function (RouteCollector $r) {
 
     $r->get('/leads', 'UserController@leads');
     $r->get('/ajax/leads', 'UserController@leadsAjax');
+    $r->get('/leads/{user_id:\d+}', 'UserController@leadDetail');
 
     $r->get('/service-tickets', 'ServiceTicketController@ticketList');
     $r->get('/service-tickets/{uuid}', 'ServiceTicketController@conversation');
