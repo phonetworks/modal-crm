@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager;
 use Pho\Crm\Model\ServiceConversation;
 use Pho\Crm\Model\ServiceTicket;
+use Pho\Crm\Model\User;
 use Pho\Crm\Traits\AuthTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Rakit\Validation\Validator;
@@ -54,13 +55,23 @@ class ServiceTicketController
                 },
                 'serviceConversations.user',
                 'assigneeUser',
-                'byUser',
             ])
             ->firstOrFail();
+        $by = User::where('id', $ticket->by)
+            ->with([
+                'instances.site',
+            ])
+            ->withCount([
+                'accessTokens' => function ($query) {
+                    $query->whereRaw('created_at > (NOW() - INTERVAL 30 DAY)');
+                },
+                'serviceConversations',
+            ])->first();
         $conversations = $ticket->serviceConversations;
 
         return new HtmlResponse(view('ticket_conversation.php', [
             'ticket' => $ticket,
+            'by' => $by,
             'conversations' => $conversations,
             'ticketStatusToText' => $this->getTicketStatusToText(),
             'ticketTypeToText' => $this->getTicketTypeToText(),
