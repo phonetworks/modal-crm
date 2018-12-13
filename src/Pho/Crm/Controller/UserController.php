@@ -65,11 +65,6 @@ class UserController
 
     public function leadDetail($user_id)
     {
-        $isLoggedIn = $this->isLoggedIn();
-        if (! $isLoggedIn) {
-            return new RedirectResponse(url('login'));
-        }
-
         $user = User::where('id', $user_id)
         ->with([
             'instances.site',
