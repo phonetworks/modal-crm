@@ -18,7 +18,9 @@ class ScheduleRunCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $scheduler = new Scheduler();
-        $scheduler->call([ $this, 'closeTicket' ])->daily();
+        $scheduler->call(function () {
+            $this->closeTicket();
+        })->daily();
         $scheduler->run();
     }
 
