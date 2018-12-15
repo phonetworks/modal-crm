@@ -12,7 +12,7 @@ class HerokuScheduleRunCommand extends Command
     protected function configure()
     {
         $this->setName('heroku:schedule:run');
-        $this->addOption('sleep', null, InputOption::VALUE_OPTIONAL, 'Seconds used to sleep', 5);
+        $this->addOption('sleep', null, InputOption::VALUE_OPTIONAL, 'Seconds used to sleep', 60);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
