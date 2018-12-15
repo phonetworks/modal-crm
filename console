@@ -5,4 +5,5 @@ include __DIR__ . '/bootstrap.php';
 
 $application = new \Symfony\Component\Console\Application();
 $application->add(new \Pho\Crm\Command\ScheduleRunCommand());
+$application->add(new \Pho\Crm\Command\HerokuScheduleRunCommand());
 $application->run();
