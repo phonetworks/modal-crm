@@ -20,8 +20,13 @@ $container = require 'di/container.php';
 /**
  * Load environment variables
  */
-$dotenv = new Dotenv(APP_ROOT);
-$dotenv->load();
+try {
+    $dotenv = new Dotenv(APP_ROOT);
+    $dotenv->load();
+}
+catch (\Dotenv\Exception\InvalidPathException $e) {
+    //
+}
 
 
 /**
