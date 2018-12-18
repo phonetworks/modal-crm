@@ -1,5 +1,4 @@
-<?= view('inc/header.php') ?>
-<?= view('inc/navbar.php') ?>
+<?php $this->layout('layout/main.php', [ 'title' => 'Leads' ]) ?>
 
 <div class="container">
     <h1>Leads</h1>
@@ -55,6 +54,8 @@
     </div>
 </div>
 
+<?php $this->start('scripts') ?>
+
 <script>
     
 (function ($, window) {
@@ -92,9 +93,9 @@
 <tr>
     <td>
         <button href="#" class="btn-email btn btn-link float-right"><span class="fas fa-envelope"></span></button>
-        <a href="${baseUrl}/leads/${user.id}">${user.first_name || ''} ${user.last_name || ''}</a>
+        <a href="${baseUrl}/leads/${user.id}">${escapeHtml((user.first_name || '') + (user.last_name || ''))}</a>
     </td>
-    <td>${(user.instances[0] && user.instances[0].site) ? user.instances[0].site.url : ''}</td>
+    <td>${escapeHtml((user.instances[0] && user.instances[0].site) ? user.instances[0].site.url : '')}</td>
     <td>${user.service_conversations_count}</td>
     <td></td><td>${user.access_tokens_count}</td>
 </tr>
@@ -142,4 +143,4 @@
 
 </script>
 
-<?= view('inc/footer.php') ?>
+<?php $this->end('scripts') ?>

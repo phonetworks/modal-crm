@@ -1,14 +1,13 @@
-<?= view('inc/header.php') ?>
-<?= view('inc/navbar.php') ?>
+<?php $this->layout('layout/main.php', [ 'title' => 'Lead Detail' ]) ?>
 
 <div class="container">
     <h1>Lead Detail</h1>
 
     <div>
-        Name: <?= "$user->first_name $user->last_name" ?>
+        Name: <?= $this->e("$user->first_name $user->last_name") ?>
     </div>
     <div>
-        Website: <?= $user->instances->first()->site->url ?>
+        Website: <?= $this->e($user->instances->first()->site->url) ?>
     </div>
     <div>
         # of email conversation: <?= $user->service_conversations_count ?>
@@ -20,5 +19,3 @@
         # of times logged in the last week: <?= $user->access_tokens_count ?>
     </div>
 </div>
-
-<?= view('inc/footer.php') ?>
