@@ -94,7 +94,7 @@
         <button href="#" class="btn-email btn btn-link float-right"><span class="fas fa-envelope"></span></button>
         <a href="${baseUrl}/leads/${user.id}">${user.first_name || ''} ${user.last_name || ''}</a>
     </td>
-    <td>${user.instances[0].site.url}</td>
+    <td>${(user.instances[0] && user.instances[0].site) ? user.instances[0].site.url : ''}</td>
     <td>${user.service_conversations_count}</td>
     <td></td><td>${user.access_tokens_count}</td>
 </tr>
@@ -118,6 +118,9 @@
                 currentPage++;
                 loadData();
             }
+        }).fail(function (err) {
+            console.log(err);
+            alert('Error occurred');
         });
     }
     loadData({append: true});
