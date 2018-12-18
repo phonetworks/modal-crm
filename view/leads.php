@@ -67,12 +67,14 @@
     var lastPage = null;
     $form.submit(function (ev) {
         ev.preventDefault();
-        loadData({ append: false });
+        loadData({ append: false, page: 1 });
     });
 
-    function loadData({ append = true } = {}) {
+    function loadData({ append = true, page = null } = {}) {
 
         var search = $search.val();
+
+        currentPage = page ? page : currentPage;
 
         var queryParams = {
             search: search,
@@ -112,7 +114,7 @@
 
             // Load more content if not reached bottom of the page
             if (hasNextPage()
-                && ($('html').height() - $(window).scrollTop() < $(document).height())) {
+                && ($('html').height() - $(window).scrollTop() < $(window).height())) {
                 currentPage++;
                 loadData();
             }
