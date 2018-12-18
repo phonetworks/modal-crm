@@ -30,7 +30,7 @@ class SessionManager
      */
     public function getRedisSessionHandler()
     {
-        $single_server = array(
+        $single_server = config('redis.url') ?: array(
             'host' => config('redis.host'),
             'port' => config('redis.port'),
         );
