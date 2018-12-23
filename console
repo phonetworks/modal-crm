@@ -1,0 +1,9 @@
+#!/usr/bin/env php
+<?php
+
+include __DIR__ . '/bootstrap.php';
+
+$application = new \Symfony\Component\Console\Application();
+$application->add($container->get(\Pho\Crm\Command\ScheduleRunCommand::class));
+$application->add($container->get(\Pho\Crm\Command\HerokuScheduleRunCommand::class));
+$application->run();

@@ -1,3 +1,3 @@
 <?php
 
-include '../bootstrap.php';
+include '../server.php';
