@@ -67,12 +67,14 @@
     var lastPage = null;
     $form.submit(function (ev) {
         ev.preventDefault();
-        loadData({ append: false });
+        loadData({ append: false, page: 1 });
     });
 
-    function loadData({ append = true } = {}) {
+    function loadData({ append = true, page = null } = {}) {
 
         var search = $search.val();
+
+        currentPage = page ? page : currentPage;
 
         var queryParams = {
             search: search,
@@ -92,7 +94,7 @@
         <button href="#" class="btn-email btn btn-link float-right"><span class="fas fa-envelope"></span></button>
         <a href="${baseUrl}/leads/${user.id}">${user.first_name || ''} ${user.last_name || ''}</a>
     </td>
-    <td>${user.instances[0].site.url}</td>
+    <td>${(user.instances[0] && user.instances[0].site) ? user.instances[0].site.url : ''}</td>
     <td>${user.service_conversations_count}</td>
     <td></td><td>${user.access_tokens_count}</td>
 </tr>
@@ -112,10 +114,13 @@
 
             // Load more content if not reached bottom of the page
             if (hasNextPage()
-                && ($('html').height() - $(window).scrollTop() < $(document).height())) {
+                && ($('html').height() - $(window).scrollTop() < $(window).height())) {
                 currentPage++;
                 loadData();
             }
+        }).fail(function (err) {
+            console.log(err);
+            alert('Error occurred');
         });
     }
     loadData({append: true});

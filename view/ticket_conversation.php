@@ -89,7 +89,10 @@
 
     var popoverContent = `
 <div class="list-group">
-    ${cannedResponses.map(res => `<a href="#" tabindex="0" data-text="${res}" class="btn-insert list-group-item list-group-item-action">${res}</a>`).join('')}
+    ${cannedResponses.length
+        ? cannedResponses.map(res => `<a href="#" tabindex="0" data-text="${res}" class="btn-insert list-group-item list-group-item-action">${res}</a>`).join('')
+        : 'No Canned Response Available'
+    }
 </div>
 `;
     var $popoverContent = $(popoverContent);
