@@ -14,9 +14,9 @@
             <tr>
                 <th>Name</th>
                 <th>Website</th>
-                <th># of email conversation</th>
+                <th class="sort-header" data-sort="email_count"># of email conversation <span class="sort-icon fa fa-sort"></span></th>
                 <th>Site Health Score</th>
-                <th># of times logged in the last week</th>
+                <th class="sort-header" data-sort="login_count"># of times logged in the last week <span class="sort-icon fa fa-sort"></span></th>
             </tr>
         </thead>
         <tbody id="users"></tbody>
@@ -66,9 +66,39 @@
     var $form = $('#form');
     var currentPage = 1;
     var lastPage = null;
+    var sortBy = {
+        email_count: null,
+        login_count: null,
+    };
     $form.submit(function (ev) {
         ev.preventDefault();
         loadData({ append: false, page: 1 });
+    });
+
+    $('.sort-header').each(function () {
+        var $header = $(this);
+        var sortKey = $header.data('sort');
+        var $sortIcon = $header.find('.sort-icon');
+        $header.on('click', function (ev) {
+            ev.preventDefault();
+            var newSort;
+            switch (sortBy[sortKey]) {
+                case null:
+                    newSort = 'asc';
+                    $sortIcon.removeClass('fa-sort').addClass('fa-sort-down');
+                    break;
+                case 'asc':
+                    newSort = 'desc';
+                    $sortIcon.removeClass('fa-sort-down').addClass('fa-sort-up');
+                    break;
+                case 'desc':
+                    newSort = null;
+                    $sortIcon.removeClass('fa-sort-up').addClass('fa-sort');
+                    break;
+            }
+            sortBy[sortKey] = newSort;
+            loadData({ append: false });
+        });
     });
 
     function loadData({ append = true, page = null } = {}) {
@@ -77,10 +107,19 @@
 
         currentPage = page ? page : currentPage;
 
+        var sort = {};
+        if (sortBy['email_count']) {
+            sort.email_count = sortBy['email_count'];
+        }
+        if (sortBy['login_count']) {
+            sort.login_count = sortBy['login_count'];
+        }
+
         var queryParams = {
             search: search,
             page: currentPage,
             limit: 20,
+            sort: sort,
         };
         $.get(<?= json_encode(url('ajax/leads')) ?> + '?' + $.param(queryParams))
         .then(function (res) {

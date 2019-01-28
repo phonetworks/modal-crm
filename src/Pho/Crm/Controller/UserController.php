@@ -27,6 +27,7 @@ class UserController
         $offset = ($page - 1) * $limit;
 
         $search = $queryParams['search'] ?? '';
+        $sort = $queryParams['sort'] ?? [];
 
         $users = User::query();
 
@@ -53,7 +54,16 @@ class UserController
                 $query->whereRaw('created_at > (NOW() - INTERVAL 30 DAY)');
             },
             'serviceConversations',
-        ])->get();
+        ]);
+
+        if (isset($sort['email_count']) && in_array($sort['email_count'], ['asc', 'desc'])) {
+            $users->orderBy('service_conversations_count', $sort['email_count']);
+        }
+        if (isset($sort['login_count']) && in_array($sort['login_count'], ['asc', 'desc'])) {
+            $users->orderBy('access_tokens_count', $sort['login_count']);
+        }
+
+        $users = $users->get();
 
         return new JsonResponse([
             'data' => $users,
