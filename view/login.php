@@ -1,4 +1,4 @@
-<?= view('inc/header.php') ?>
+<?php $this->layout('layout/skeleton.php', [ 'title' => 'Login' ]) ?>
 
 <div class="text-center">
     <form method="POST" action="<?= url('login') ?>" novalidate style="width: 100%; max-width: 330px; padding: 15px; margin: auto;">
@@ -8,7 +8,7 @@
             <div class="text-danger"><?= $fail_message ?></div>
         <?php endif ?>
         <div class="form-group">
-            <input type="email" name="email" value="<?= isset($body) ? $body['email'] : null ?>" class="form-control" placeholder="Email address" required autofocus>
+            <input type="email" name="email" value="<?= isset($body) ? $this->e($body['email']) : null ?>" class="form-control" placeholder="Email address" required autofocus>
             <?php if (isset($errors) && $errors->has('email')): ?>
                 <div class="text-danger"><?= $errors->first('email') ?></div>
             <?php endif ?>
@@ -22,5 +22,3 @@
         <button type="submit" class="btn btn-lg btn-primary btn-block">Login</button>
     </form>
 </div>
-
-<?= view('inc/footer.php') ?>

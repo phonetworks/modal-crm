@@ -1,5 +1,4 @@
-<?= view('inc/header.php') ?>
-<?= view('inc/navbar.php') ?>
+<?php $this->layout('layout/main.php', [ 'title' => 'Service Tickets' ]) ?>
 
 <div class="container">
     <h1>Service Tickets</h1>
@@ -22,10 +21,10 @@
             <?php foreach ($tickets as $ticket): ?>
                 <tr>
                     <td><a href="<?= url('service-tickets/' . $ticket->uuid) ?>"><?= $ticket->uuid ?></a></td>
-                    <td><?= $ticket->title ?></td>
+                    <td><?= $this->e($ticket->title) ?></td>
                     <td><?= $ticketTypeToText($ticket->type) ?></td>
-                    <td><?= "{$ticket->byUser->first_name} {$ticket->byUser->last_name}" ?></td>
-                    <td><?= $ticket->assigneeUser ? "{$ticket->assigneeUser->first_name} {$ticket->assigneeUser->last_name}" : '' ?></td>
+                    <td><?= $this->e("{$ticket->byUser->first_name} {$ticket->byUser->last_name}") ?></td>
+                    <td><?= $ticket->assigneeUser ? $this->e("{$ticket->assigneeUser->first_name} {$ticket->assigneeUser->last_name}") : '' ?></td>
                     <td><?= $ticket->open_date ?></td>
                     <td><?= $ticket->close_date ?></td>
                     <td><?= $ticketStatusToText($ticket->status) ?></td>
@@ -35,5 +34,3 @@
             </tbody>
     </table>
 </div>
-
-<?= view('inc/footer.php') ?>

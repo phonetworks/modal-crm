@@ -1,5 +1,4 @@
-<?= view('inc/header.php') ?>
-<?= view('inc/navbar.php') ?>
+<?php $this->layout('layout/main.php', [ 'title' => 'Ticket Conversation' ]) ?>
 
 <div class="container">
     <h1>Ticket Conversation</h1>
@@ -10,10 +9,10 @@
             <div>
                 <h2>User Info</h2>
                 <div>
-                    Name: <?= "{$by->first_name} {$by->last_name}" ?>
+                    Name: <?= $this->e("{$by->first_name} {$by->last_name}") ?>
                 </div>
                 <div>
-                    Website: <?= $by->instances->first()->site->url ?>
+                    Website: <?= $this->e($by->instances->first()->site->url) ?>
                 </div>
                 <div>
                     # of email conversation: <?= $by->service_conversations_count ?>
@@ -31,9 +30,9 @@
 
             <div class="mt-3">
                 <div>Ticket ID: <?= $ticket->uuid ?></div>
-                <div>Title: <?= $ticket->title ?></div>
+                <div>Title: <?= $this->e($ticket->title) ?></div>
                 <div>Type: <?= $ticketTypeToText($ticket->type) ?></div>
-                <div>Assigned To: <?= $ticket->assigneeUser ? "{$ticket->assigneeUser->first_name} {$ticket->assigneeUser->last_name}" : '<i>Not Assigned</i>' ?></div>
+                <div>Assigned To: <?= $ticket->assigneeUser ? $this->e("{$ticket->assigneeUser->first_name} {$ticket->assigneeUser->last_name}") : '<i>Not Assigned</i>' ?></div>
                 <div>Status: <?= $ticketStatusToText($ticket->status) ?></div>
             </div>
 
@@ -63,13 +62,13 @@
                     <div class="border mb-5">
                         <div class="border-bottom p-2">
                             <span class="fas fa-user"></span>
-                            <?= "{$conversation->user->first_name} {$conversation->user->last_name}" ?>
+                            <?= $this->e("{$conversation->user->first_name} {$conversation->user->last_name}") ?>
                             <span class="float-right">
                         <span class="fas fa-calendar"></span>
                                 <?= $conversation->created_at ?>
                     </span>
                         </div>
-                        <div class="p-2"><?= $conversation->text ?></div>
+                        <div class="p-2"><?= $this->e($conversation->text) ?></div>
                     </div>
                 <?php endforeach ?>
             </div>
@@ -78,6 +77,8 @@
     </div>
 
 </div>
+
+<?php $this->start('scripts') ?>
 
 <script>
 
@@ -112,4 +113,4 @@
 
 </script>
 
-<?= view('inc/footer.php') ?>
+<?php $this->end('scripts') ?>

@@ -57,13 +57,9 @@ if (! function_exists('view')) {
      */
     function view($viewFile, array $viewModel = [])
     {
-        extract($viewModel);
+        $templates = new \League\Plates\Engine(APP_ROOT . '/view/', null);
 
-        ob_start();
-        require APP_ROOT . '/view/' . $viewFile;
-        $content = ob_get_clean();
-
-        return $content;
+        return $templates->render($viewFile, $viewModel);
     }
 }
 
