@@ -54,6 +54,9 @@ class UserController
                 $query->whereRaw('created_at > (NOW() - INTERVAL 30 DAY)');
             },
             'serviceConversations',
+            'analytics' => function ($query) {
+                $query->whereRaw('time > (NOW() - INTERVAL 1 WEEK)');
+            },
         ]);
 
         if (isset($sort['email_count']) && in_array($sort['email_count'], ['asc', 'desc'])) {

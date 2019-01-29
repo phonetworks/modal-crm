@@ -34,4 +34,10 @@ class User extends Model
     {
         return $this->hasMany(AccessToken::class, 'user_id', 'id');
     }
+
+    public function analytics()
+    {
+        return $this->hasManyThrough(Analytics::class, Instance::class,
+            'user_id', 'id', 'id', 'uuid');
+    }
 }
