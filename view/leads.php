@@ -14,9 +14,24 @@
             <tr>
                 <th>Name</th>
                 <th>Website</th>
-                <th class="sort-header" data-sort="email_count"># of email conversation <span class="sort-icon fa fa-sort"></span></th>
-                <th>Site Health Score</th>
-                <th class="sort-header" data-sort="login_count"># of times logged in the last week <span class="sort-icon fa fa-sort"></span></th>
+                <th class="sort-header" data-sort="email_count">
+                    <div class="d-flex align-items-center">
+                        # of email conversation
+                        <span class="sort-icon fa fa-sort"></span>
+                    </div>
+                </th>
+                <th class="sort-header" data-sort="analytics_count">
+                    <div class="d-flex align-items-center">
+                        Site Health Score
+                        <span class="sort-icon fa fa-sort"></span>
+                    </div>
+                </th>
+                <th class="sort-header" data-sort="login_count">
+                    <div class="d-flex align-items-center">
+                        # of times logged in the last week
+                        <span class="sort-icon fa fa-sort"></span>
+                    </div>
+                </th>
             </tr>
         </thead>
         <tbody id="users"></tbody>
@@ -69,6 +84,7 @@
     var sortBy = {
         email_count: null,
         login_count: null,
+        analytics_count: null,
     };
     $form.submit(function (ev) {
         ev.preventDefault();
@@ -113,6 +129,9 @@
         }
         if (sortBy['login_count']) {
             sort.login_count = sortBy['login_count'];
+        }
+        if (sortBy['analytics_count']) {
+            sort.analytics_count = sortBy['analytics_count'];
         }
 
         var queryParams = {

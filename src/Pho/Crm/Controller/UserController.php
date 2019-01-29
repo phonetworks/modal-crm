@@ -65,6 +65,9 @@ class UserController
         if (isset($sort['login_count']) && in_array($sort['login_count'], ['asc', 'desc'])) {
             $users->orderBy('access_tokens_count', $sort['login_count']);
         }
+        if (isset($sort['analytics_count']) && in_array($sort['analytics_count'], ['asc', 'desc'])) {
+            $users->orderBy('analytics_count', $sort['analytics_count']);
+        }
 
         $users = $users->get();
 
