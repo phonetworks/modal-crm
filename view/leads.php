@@ -136,7 +136,8 @@
     </td>
     <td><a href="${escapeHtml((user.instances[0] && user.instances[0].site) ? user.instances[0].site.url : '')}" target="_blank">${escapeHtml((user.instances[0] && user.instances[0].site) ? user.instances[0].site.url : '')}</a></td>
     <td>${user.service_conversations_count}</td>
-    <td></td><td>${user.access_tokens_count}</td>
+    <td>${user.analytics_count}</td>
+    <td>${user.access_tokens_count}</td>
 </tr>
 `);
                 $tr.find('.btn-email').on('click', function (ev) {
