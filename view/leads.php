@@ -16,19 +16,19 @@
                 <th>Website</th>
                 <th class="sort-header" data-sort="email_count">
                     <div class="d-flex align-items-center">
-                        # of email conversation
+                        <span class="flex-fill"># of email conversation</span>
                         <span class="sort-icon fa fa-sort"></span>
                     </div>
                 </th>
                 <th class="sort-header" data-sort="analytics_count">
                     <div class="d-flex align-items-center">
-                        Site Health Score
+                        <span class="flex-fill">Site Health Score</span>
                         <span class="sort-icon fa fa-sort"></span>
                     </div>
                 </th>
                 <th class="sort-header" data-sort="login_count">
                     <div class="d-flex align-items-center">
-                        # of times logged in the last week
+                        <span class="flex-fill"># of times logged in the last week</span>
                         <span class="sort-icon fa fa-sort"></span>
                     </div>
                 </th>
