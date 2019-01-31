@@ -173,9 +173,9 @@ SQL;
                 return $instance->user_id === $user->id;
             });
             array_walk($user->instances, function ($instance) use (&$sites) {
-                $instance->site = array_filter($sites, function ($site) use (&$instance) {
+                $instance->site = current(array_filter($sites, function ($site) use (&$instance) {
                     return $site->instance_id === $instance->id;
-                });
+                }));
             });
 
             // remove any field that is to be hidden
