@@ -27,4 +27,15 @@ return [
         return $logger;
     },
 
+    \PDO::class => function () {
+        $dbHost = config('database.host');
+        $dbName = config('database.database');
+        $username = config('database.username');
+        $password = config('database.password');
+        $conn = new \PDO("mysql:host=$dbHost;dbname=$dbName", $username, $password);
+        $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+        return $conn;
+    },
+
 ];
