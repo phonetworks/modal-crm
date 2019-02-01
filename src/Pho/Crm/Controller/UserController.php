@@ -77,13 +77,13 @@ SQL;
             case 'graphjs':
                 $whereInstances .= ($whereInstances ? "\nAND" : "") . <<<SQL
 
-(`instances`.`group_name` IS NULL OR `instances`.`group_name` = "")
+(`instances`.`groups_name` IS NULL OR `instances`.`groups_name` = "")
 SQL;
                 break;
             case 'groups':
                 $whereInstances .= ($whereInstances ? "\nAND" : "") . <<<SQL
 
-(`instances`.`group_name` IS NOT NULL AND `instances`.`group_name` != "")
+(`instances`.`groups_name` IS NOT NULL AND `instances`.`groups_name` != "")
 SQL;
                 break;
         }
