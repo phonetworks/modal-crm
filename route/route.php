@@ -10,9 +10,10 @@ return function (RouteCollector $r) {
     $r->post('/login', 'AuthController@loginPost');
     $r->post('/logout', 'AuthController@logoutPost');
 
-    $r->get('/leads', [ 'auth', 'UserController@leads' ]);
-    $r->get('/ajax/leads', [ 'auth', 'UserController@leadsAjax' ]);
-    $r->get('/leads/{user_id:\d+}', [ 'auth', 'UserController@leadDetail' ]);
+    $r->get('/customers/graphjs', [ 'auth', 'UserController@customersGraphjs' ]);
+    $r->get('/customers/groups', [ 'auth', 'UserController@customersGroups' ]);
+    $r->get('/ajax/customers', [ 'auth', 'UserController@customersAjax' ]);
+    $r->get('/customers/{user_id:\d+}', [ 'auth', 'UserController@customerDetail' ]);
 
     $r->get('/service-tickets', [ 'auth', 'ServiceTicketController@ticketList' ]);
     $r->get('/service-tickets/{uuid}', [ 'auth', 'ServiceTicketController@conversation' ]);

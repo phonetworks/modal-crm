@@ -9,14 +9,23 @@ use Zend\Diactoros\Response\JsonResponse;
 
 class UserController
 {
-    public function leads()
+    public function customersGraphjs()
     {
-        return new HtmlResponse(view('leads.php'));
+        return $this->customers('graphjs');
     }
 
-    public function leadsAjax(ServerRequestInterface $request, \PDO $pdo)
+    public function customersGroups()
     {
+        return $this->customers('groups');
+    }
 
+    public function customers($type)
+    {
+        return new HtmlResponse(view('customers.php', [ 'customerType' => $type ]));
+    }
+
+    public function customersAjax(ServerRequestInterface $request, \PDO $pdo)
+    {
         $defaultPage = 1;
         $defaultLimit = 20;
 
@@ -28,34 +37,33 @@ class UserController
 
         $search = $queryParams['search'] ?? '';
         $sort = $queryParams['sort'] ?? [];
+        $type = $queryParams['type'] ?? null;
 
         $whereClause = '';
         $whereBindings = [];
 
         $orderBy = [];
 
+        $whereUsers = '';
+        $whereInstances = '';
+
         // preparing where clause which is common for queries
         // to get total and users
         if ($search) {
-            $whereClause = <<<SQL
+            $whereUsers .= <<<SQL
 
-WHERE
 `first_name` LIKE ?
 OR
 `last_name` LIKE ?
-OR
+SQL;
+            $whereInstances .= <<<SQL
+
 EXISTS (
-  SELECT * FROM `instances`
+  SELECT * FROM `sites`
   WHERE
-  `users`.`id` = `instances`.`user_id`
+  `instances`.`id` = `sites`.`instance_id`
   AND
-  EXISTS (
-    SELECT * FROM `sites`
-    WHERE
-    `instances`.`id` = `sites`.`instance_id`
-    AND
-    `url` LIKE ?
-  )
+  `url` LIKE ?
 )
 SQL;
             $whereBindings = [
@@ -65,6 +73,41 @@ SQL;
             ];
         }
 
+        switch ($type) {
+            case 'graphjs':
+                $whereInstances .= ($whereInstances ? "\nAND" : "") . <<<SQL
+
+(`instances`.`group_name` IS NULL OR `instances`.`group_name` = "")
+SQL;
+                break;
+            case 'groups':
+                $whereInstances .= ($whereInstances ? "\nAND" : "") . <<<SQL
+
+(`instances`.`group_name` IS NOT NULL AND `instances`.`group_name` != "")
+SQL;
+                break;
+        }
+
+        if ($whereInstances) {
+            $whereUsers .= ($whereUsers ? "\nOR" : "") . <<<SQL
+
+EXISTS (
+  SELECT * FROM `instances`
+  WHERE
+  $whereInstances
+  AND
+  `users`.`id` = `instances`.`user_id`
+)
+SQL;
+        }
+
+        if ($whereUsers) {
+            $whereClause .= <<<SQL
+
+WHERE
+$whereUsers
+SQL;
+        }
 
         // getting total
         $countQuery = "SELECT count(*) AS aggregate FROM `users` $whereClause";
@@ -169,9 +212,9 @@ SQL;
 
         // prepare structure for response
         array_walk($users, function ($user) use (&$instances, &$sites) {
-            $user->instances = array_filter($instances, function ($instance) use (&$user) {
+            $user->instances = array_values(array_filter($instances, function ($instance) use (&$user) {
                 return $instance->user_id === $user->id;
-            });
+            }));
             array_walk($user->instances, function ($instance) use (&$sites) {
                 $instance->site = current(array_filter($sites, function ($site) use (&$instance) {
                     return $site->instance_id === $instance->id;
@@ -190,7 +233,7 @@ SQL;
         ]);
     }
 
-    public function leadDetail($user_id)
+    public function customerDetail($user_id)
     {
         $user = User::where('id', $user_id)
         ->with([
@@ -203,7 +246,7 @@ SQL;
             'serviceConversations',
         ])->first();
 
-        return new HtmlResponse(view('lead_detail.php', [
+        return new HtmlResponse(view('customer_detail.php', [
             'user' => $user,
         ]));
     }
