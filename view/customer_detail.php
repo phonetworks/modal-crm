@@ -1,7 +1,7 @@
 <?php $this->layout('layout/main.php', [ 'title' => 'Lead Detail' ]) ?>
 
 <div class="container">
-    <h1>Lead Detail</h1>
+    <h1>Customer Detail</h1>
 
     <div>
         Name: <?= $this->e("$user->first_name $user->last_name") ?>

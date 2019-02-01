@@ -1,7 +1,7 @@
 <?php $this->layout('layout/main.php', [ 'title' => 'Leads' ]) ?>
 
 <div class="container">
-    <h1>Leads</h1>
+    <h1>Customers</h1>
 
     <div class="form-group">
         <form id="form">
@@ -76,6 +76,7 @@
 (function ($, window) {
     'use strict';
 
+    var customerType = <?= json_encode($customerType) ?>;
     var baseUrl = <?= json_encode(url()) ?>;
     var $search = $('#search');
     var $form = $('#form');
@@ -135,12 +136,13 @@
         }
 
         var queryParams = {
+            type: customerType,
             search: search,
             page: currentPage,
             limit: 20,
             sort: sort,
         };
-        $.get(<?= json_encode(url('ajax/leads')) ?> + '?' + $.param(queryParams))
+        $.get(<?= json_encode(url('ajax/customers')) ?> + '?' + $.param(queryParams))
         .then(function (res) {
             if (! lastPage) {
                 lastPage = res.last_page;
@@ -151,7 +153,7 @@
 <tr>
     <td>
         <button href="#" class="btn-email btn btn-link float-right"><span class="fas fa-envelope"></span></button>
-        <a href="${baseUrl}/leads/${user.id}">${escapeHtml((user.first_name || '') + (user.last_name || ''))}</a>
+        <a href="${baseUrl}/customers/${user.id}">${escapeHtml((user.first_name || '') + (user.last_name || ''))}</a>
     </td>
     <td><a href="${escapeHtml((user.instances[0] && user.instances[0].site) ? user.instances[0].site.url : '')}" target="_blank">${escapeHtml((user.instances[0] && user.instances[0].site) ? user.instances[0].site.url : '')}</a></td>
     <td>${user.service_conversations_count}</td>

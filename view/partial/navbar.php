@@ -10,10 +10,10 @@
                 <a href="#" class="nav-link">Home</a>
             </li>
             <li class="nav-item">
-                <a href="<?= url('leads') ?>" class="nav-link">Leads</a>
+                <a href="<?= url('customers/graphjs') ?>" class="nav-link">GraphJS</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Customers</a>
+                <a href="<?= url('customers/groups') ?>" class="nav-link">Grou.ps</a>
             </li>
             <li class="nav-item">
                 <a href="<?= url('service-tickets') ?>" class="nav-link">Service</a>
