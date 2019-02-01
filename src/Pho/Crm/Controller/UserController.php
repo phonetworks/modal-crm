@@ -212,9 +212,9 @@ SQL;
 
         // prepare structure for response
         array_walk($users, function ($user) use (&$instances, &$sites) {
-            $user->instances = array_filter($instances, function ($instance) use (&$user) {
+            $user->instances = array_values(array_filter($instances, function ($instance) use (&$user) {
                 return $instance->user_id === $user->id;
-            });
+            }));
             array_walk($user->instances, function ($instance) use (&$sites) {
                 $instance->site = current(array_filter($sites, function ($site) use (&$instance) {
                     return $site->instance_id === $instance->id;
