@@ -37,6 +37,9 @@ class ServiceTicketController
                 ->orderBy('open_date', 'desc')
                 ->get();
 
+        error_log("ticket count is: ".count($tickets));
+        error_log("tickets are: ".print_r($tickets));
+
         return new HtmlResponse(view('tickets.php', [
             'tickets' => $tickets,
             'ticketStatusToText' => $this->getTicketStatusToText(),
