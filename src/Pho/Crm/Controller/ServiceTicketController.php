@@ -28,11 +28,13 @@ class ServiceTicketController
 
         $tickets = ServiceTicket::query();
 
-        $tickets = $tickets->where('by', $user->id)->orWhere('assignee', $user->id)
-            ->limit(20)
-            ->offset(0)
-            ->orderBy('open_date', 'desc')
-            ->get();
+        if($user->crm_role > 1)
+            $tickets = $tickets->where('by', $user->id)->orWhere('assignee', $user->id);
+
+        $tickets->limit(20)
+                ->offset(0)
+                ->orderBy('open_date', 'desc')
+                ->get();
 
         return new HtmlResponse(view('tickets.php', [
             'tickets' => $tickets,
