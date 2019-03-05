@@ -28,6 +28,7 @@ class ServiceTicketController
 
         $tickets = ServiceTicket::query();
 
+        error_log("Crm Role is: ".$user->crm_role);
         if($user->crm_role > 1)
             $tickets = $tickets->where('by', $user->id)->orWhere('assignee', $user->id);
 
