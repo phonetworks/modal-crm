@@ -38,7 +38,7 @@ class ServiceTicketController
                 ->get();
 
         error_log("ticket count is: ".count($tickets));
-        error_log("tickets are: ".print_r($tickets));
+        error_log("tickets are: ".print_r($tickets, true));
 
         return new HtmlResponse(view('tickets.php', [
             'tickets' => $tickets,
