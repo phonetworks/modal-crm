@@ -32,7 +32,7 @@ class ServiceTicketController
         if($user->crm_role > 1)
             $tickets = $tickets->where('by', $user->id)->orWhere('assignee', $user->id);
 
-        $tickets->limit(20)
+        $tickets = $tickets->limit(20)
                 ->offset(0)
                 ->orderBy('open_date', 'desc')
                 ->get();
