@@ -18,6 +18,7 @@ return function (RouteCollector $r) {
     $r->get('/service-tickets', [ 'auth', 'ServiceTicketController@ticketList' ]);
     $r->get('/service-tickets/{uuid}', [ 'auth', 'ServiceTicketController@conversation' ]);
     $r->post('/service-tickets/{uuid}/reply', [ 'auth', 'ServiceTicketController@replyPost' ]);
+    $r->post('/service-tickets/{uuid}/close', [ 'auth', 'ServiceTicketController@close' ]);
 
     $r->post('/mailgun-messages', 'MailgunController@index');
 

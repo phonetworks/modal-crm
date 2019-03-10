@@ -37,6 +37,12 @@
             </div>
 
             <?php if ($ticket->status !== \Pho\Crm\Model\ServiceTicket::STATUS_CLOSED): ?>
+                <form method="post" action="<?= url("service-tickets/{$ticket->uuid}/close") ?>">
+                    <button type="submit" class="btn btn-warning btn-sm">Close</button>
+                </form>
+            <?php endif ?>
+
+            <?php if ($ticket->status !== \Pho\Crm\Model\ServiceTicket::STATUS_CLOSED): ?>
                 <div class="mt-4">
                     <form method="post" action="<?= url("service-tickets/{$ticket->uuid}/reply") ?>">
                         <?php if (isset($fail_message)): ?>
