@@ -10,6 +10,7 @@ use Pho\Crm\Model\ServiceTicket;
 use Pho\Crm\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
 use Rakit\Validation\Validator;
+use Teapot\StatusCode;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\RedirectResponse;
 
@@ -183,5 +184,21 @@ class ServiceTicketController
             }
             return $text;
         };
+    }
+
+    public function close($uuid, ServerRequestInterface $request, \PDO $pdo)
+    {
+        $stmt = $pdo->prepare("SELECT * FROM `service-tickets` WHERE `uuid` = ?");
+        $stmt->execute([ $uuid ]);
+        $ticket = $stmt->fetch(\PDO::FETCH_OBJ);
+        if (! $ticket) {
+            return new HtmlResponse('Ticket Not Found', StatusCode::NOT_FOUND);
+        }
+        if ($ticket->status == ServiceTicket::STATUS_CLOSED) {
+            return new HtmlResponse('Ticket already closed', StatusCode::BAD_REQUEST);
+        }
+        $stmt = $pdo->prepare("UPDATE `service-tickets` SET `status` = " . ServiceTicket::STATUS_CLOSED . " WHERE `uuid` = ?");
+        $stmt->execute([ $uuid ]);
+        return new RedirectResponse(url("service-tickets/{$uuid}"));
     }
 }
