@@ -8,6 +8,7 @@ use Pho\Crm\Auth;
 use Pho\Crm\Model\ServiceConversation;
 use Pho\Crm\Model\ServiceTicket;
 use Pho\Crm\Model\User;
+use Pho\Crm\Service\EmailService;
 use Psr\Http\Message\ServerRequestInterface;
 use Rakit\Validation\Validator;
 use Teapot\StatusCode;
@@ -17,10 +18,12 @@ use Zend\Diactoros\Response\RedirectResponse;
 class ServiceTicketController
 {
     private $auth;
+    private $emailService;
 
-    public function __construct(Auth $auth)
+    public function __construct(Auth $auth, EmailService $emailService)
     {
         $this->auth = $auth;
+        $this->emailService = $emailService;
     }
 
     public function ticketList()
@@ -147,6 +150,10 @@ class ServiceTicketController
         }
         Manager::connection()->commit();
 
+        if (! $isRepliedByCreator) {
+            $this->emailService->sendTicketReplied($ticket->uuid, $ticket->byUser->email, "{$currentUser->first_name} {$currentUser->last_name}", $currentUser->email);
+        }
+
         return new RedirectResponse(url("service-tickets/{$uuid}"));
     }
 
@@ -197,6 +204,8 @@ class ServiceTicketController
 
         $stmt = $pdo->prepare("UPDATE `service-tickets` SET `status` = " . ServiceTicket::STATUS_CLOSED . " WHERE `uuid` = ?");
         $stmt->execute([ $uuid ]);
+
+        $this->emailService->sendTicketClosed($ticket->uuid, $ticket->byUser->email);
 
         return new RedirectResponse(url("service-tickets/{$uuid}"));
     }

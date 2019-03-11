@@ -38,4 +38,18 @@ return [
         return $conn;
     },
 
+    \Mailgun\Mailgun::class => function () {
+        $key = config('mail.mailgun_key');
+        $mailgun = \Mailgun\Mailgun::create($key);
+        return $mailgun;
+    },
+
+    \Pho\Crm\Service\EmailService::class => function (\Mailgun\Mailgun $mailgun, LoggerInterface $logger) {
+        $emailService = new \Pho\Crm\Service\EmailService($mailgun, $logger);
+        $emailService->setDefaultDomain(config('mail.mailgun_domain'));
+        $emailService->setDefaultFromAddress(config('mail.from.address'));
+        $emailService->setDefaultFromName(config('mail.from.name'));
+        return $emailService;
+    },
+
 ];
