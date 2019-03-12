@@ -18,6 +18,9 @@
             <li class="nav-item">
                 <a href="<?= url('service-tickets') ?>" class="nav-link">Service</a>
             </li>
+            <li class="nav-item">
+                <a href="<?= url('tools') ?>" class="nav-link">Tools</a>
+            </li>
         </ul>
         <form method="post" action="<?= url('logout') ?>">
             <button type="submit" class="btn btn-outline-danger">Logout</button>

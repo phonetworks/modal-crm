@@ -20,6 +20,9 @@ return function (RouteCollector $r) {
     $r->post('/service-tickets/{uuid}/reply', [ 'auth', 'ServiceTicketController@replyPost' ]);
     $r->post('/service-tickets/{uuid}/close', [ 'auth', 'ServiceTicketController@close' ]);
 
+    $r->get('/tools', [ 'auth', 'ToolsController@html' ]);
+
+
     $r->post('/mailgun-messages', 'MailgunController@index');
 
 };

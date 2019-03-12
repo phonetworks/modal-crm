@@ -32,6 +32,9 @@ class ServiceTicketController
 
         $tickets = ServiceTicket::query();
 
+
+        error_log("Crm Role is: ".$user->crm_role);
+
         if($user->crm_role > 1)
             $tickets = $tickets->where('by', $user->id)->orWhere('assignee', $user->id);
 
@@ -39,6 +42,9 @@ class ServiceTicketController
                 ->offset(0)
                 ->orderBy('open_date', 'desc')
                 ->get();
+
+        error_log("ticket count is: ".count($tickets));
+        error_log("tickets are: ".print_r($tickets, true));
 
         return new HtmlResponse(view('tickets.php', [
             'tickets' => $tickets,
@@ -92,7 +98,8 @@ class ServiceTicketController
                 'byUser',
             ])
             ->firstOrFail();
-        $conversations = $ticket->serviceConversations;
+       
+      $conversations = $ticket->serviceConversations;
 
         if ($ticket->status === ServiceTicket::STATUS_CLOSED) {
             return new HtmlResponse(view('ticket_conversation.php', [
@@ -201,6 +208,7 @@ class ServiceTicketController
         if ($ticket->status == ServiceTicket::STATUS_CLOSED) {
             return new HtmlResponse('Ticket already closed', StatusCode::BAD_REQUEST);
         }
+
 
         $stmt = $pdo->prepare("UPDATE `service-tickets` SET `status` = " . ServiceTicket::STATUS_CLOSED . " WHERE `uuid` = ?");
         $stmt->execute([ $uuid ]);
