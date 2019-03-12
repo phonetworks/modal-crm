@@ -7,12 +7,20 @@ use Illuminate\Database\Capsule\Manager;
 use Pho\Crm\Model\ServiceConversation;
 use Pho\Crm\Model\ServiceTicket;
 use Pho\Crm\Model\User;
+use Pho\Crm\Service\EmailService;
 use Psr\Http\Message\ServerRequestInterface;
 use Ramsey\Uuid\Uuid;
 use Zend\Diactoros\Response\HtmlResponse;
 
 class MailgunController
 {
+    private $emailService;
+
+    public function __construct(EmailService $emailService)
+    {
+        $this->emailService = $emailService;
+    }
+
     public function index(ServerRequestInterface $request)
     {
         $body = $request->getParsedBody();
@@ -42,6 +50,7 @@ class MailgunController
                 'created_at' => Carbon::now(),
             ]);
             Manager::connection()->commit();
+            $this->emailService->sendTicketOpened($uuid->toString(), $user->email);
         }
 
         return new HtmlResponse('OK');
