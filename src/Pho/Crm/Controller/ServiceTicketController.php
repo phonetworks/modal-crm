@@ -213,7 +213,15 @@ class ServiceTicketController
         $stmt = $pdo->prepare("UPDATE `service-tickets` SET `status` = " . ServiceTicket::STATUS_CLOSED . " WHERE `uuid` = ?");
         $stmt->execute([ $uuid ]);
 
-        $this->emailService->sendTicketClosed($ticket->uuid, $ticket->byUser->email);
+        $stmt = $pdo->prepare("SELECT * FROM `users` WHERE `id` = ?");
+        $stmt->execute([ $ticket->by ]);
+        $user = $stmt->fetch(\PDO::FETCH_OBJ);
+
+        if (! $user) {
+            return new HtmlResponse('User Not Found', StatusCode::NOT_FOUND);
+        }
+
+        $this->emailService->sendTicketClosed($ticket->uuid, $user->email);
 
         return new RedirectResponse(url("service-tickets/{$uuid}"));
     }
