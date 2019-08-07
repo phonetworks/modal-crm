@@ -55,7 +55,7 @@ class EmailService
         $viewModel = [
             'ticketUrl' => $ticketUrl,
         ];
-        $this->email($creatorEmail, 'Ticket Opened', [
+        $this->email($creatorEmail, 'Ticket Opened '.$ticketUuid, [
             'text' => view('email/ticket_opened.text.php', $viewModel),
             'html' => view('email/ticket_opened.html.php', $viewModel),
         ]);
@@ -69,7 +69,7 @@ class EmailService
             'repliedByEmail' => $repliedByEmail,
             'ticketUrl' => $ticketUrl,
         ];
-        $this->email($creatorEmail, 'Ticket Created', [
+        $this->email($creatorEmail, 'Ticket Created '.$ticketUuid, [
             'text' => view('email/ticket_replied.text.php', $viewModel),
             'html' => view('email/ticket_replied.html.php', $viewModel),
         ]);
@@ -81,7 +81,7 @@ class EmailService
         $viewModel = [
             'ticketUrl' => $ticketUrl,
         ];
-        $this->email($creatorEmail, 'Ticket Created', [
+        $this->email($creatorEmail, 'Ticket Closed '.$ticketUuid, [
             'text' => view('email/ticket_closed.text.php', $viewModel),
             'html' => view('email/ticket_closed.html.php', $viewModel),
         ]);
