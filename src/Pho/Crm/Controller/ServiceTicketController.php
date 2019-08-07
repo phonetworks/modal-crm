@@ -94,8 +94,8 @@ class ServiceTicketController
                     $query->orderBy('created_at', 'desc');
                 },
                 'serviceConversations.user',
-                'assigneeUser',
-                'byUser',
+                'assignee',
+                'by',
             ])
             ->firstOrFail();
        
