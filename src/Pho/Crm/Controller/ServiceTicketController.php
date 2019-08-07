@@ -30,7 +30,7 @@ class ServiceTicketController
     {
         $user = $this->auth->getUser();
 
-        $tickets = ServiceTicket::query();
+        $tickets = ServiceTicket::query()->where("status", 1);
 
 
         error_log("Crm Role is: ".$user->crm_role);
